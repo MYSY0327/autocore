@@ -141,12 +141,7 @@ return baseclass.extend({
 				systeminfo.load[1] / 65535.0,
 				systeminfo.load[2] / 65535.0
 			) : null,
-			_('CPU usage'),    cpuusage.cpuusage,
-			_('Help & Feedback'),  E('div', { 'style': 'display:flex;gap:8px;align-items:center;' }, [
-				E('a', { 'href': 'https://github.com/MinimaxFlora/Firmware-Build', 'target': '_blank', 'class': 'support-btn' }, _('Project Website')),
-				E('a', { 'href': 'https://github.com/MinimaxFlora/Firmware-Build/issues', 'target': '_blank', 'class': 'support-btn' }, _('Issue Feedback')),
-				E('a', { 'href': 'https://pay.kejizero.xyz', 'target': '_blank', 'class': 'support-btn' }, _('Donation Address'))
-			])
+			_('CPU usage'),    cpuusage.cpuusage
 		];
 
 		if (tempinfo.tempinfo) {
