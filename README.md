@@ -32,7 +32,7 @@ fork 自 [ImmortalWrt 官方 autocore](https://github.com/immortalwrt/autocore)�
 
 ```bash
 # 将本仓库加入 feeds（以 openwrt-25.12 分支为例）
-git clone -b openwrt-25.12 https://github.com/MinimaxFlora/autocore.git package/autocore
+git clone -b openwrt-25.12 https://github.com/MYSY0327/autocore.git package/autocore
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 
