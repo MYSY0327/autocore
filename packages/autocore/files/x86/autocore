@@ -21,17 +21,18 @@ start() {
 	uci set network.@globals[0].packet_steering="1"
 	uci commit network
 
-	# Hardware offload (ethtool -K): disabled to let kernel drivers decide defaults.
-	# Most drivers (igc, e1000e, r8169, virtio_net, etc.) already enable sensible
-	# offload features by default on OpenWrt 6.18+. Forcing them on has caused
-	# stability issues on some NICs (e.g. I225/I226 with TSO+forwarding).
-	#
-	# for i in /sys/class/net/eth*; do
-	# 	[ -d "$i" ] || continue
-	# 	i="${i##*/}"
-	# 	ethtool -K "$i" rx-checksum on tx-scatter-gather on gso on tso on ufo on
-	# 	ethtool -K "$i" tx-checksum-ip-generic on || {
-	# 		ethtool -K "$i" tx-checksum-ipv4 on tx-checksum-ipv6 on
-	# 	}
-	# done
+	# 强制开启网卡硬件卸载功能
+	for i in /sys/class/net/eth*; do
+		[ -d "$i" ] || continue
+		i="${i##*/}"
+		ethtool -K "$i" rx-checksum on tx-scatter-gather on gso on tso on ufo on
+		ethtool -K "$i" tx-checksum-ip-generic on || {
+			ethtool -K "$i" tx-checksum-ipv4 on tx-checksum-ipv6 on
+		}
+		# I225/I226 (igc 驱动): 调大 rx/tx 环形缓冲区到最大值, 降低高负载丢包
+		if ethtool -i "$i" | grep -q "driver: igc"; then
+			ethtool -G "$i" rx "$(ethtool -g "$i" | awk '/^RX:/ {print $2; exit}')"
+			ethtool -G "$i" tx "$(ethtool -g "$i" | awk '/^TX:/ {print $2; exit}')"
+		fi
+	done
 } >"/dev/null" 2>&1
